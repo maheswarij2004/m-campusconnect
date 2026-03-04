@@ -21,13 +21,15 @@ app.use(cors());
 
 // routes
 app.use('/api/admin', authMiddleware, adminRoutes); // adminRoutes uses checkAdmin internally
-
+// in server.js (add near other app.use)
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/conversations', require('./routes/conversations'));
 app.get('/', (req, res) => res.send('CampusConnect Chat Module Server is running ✅'));
 app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
 // connect mongo
 const MONGO = process.env.MONGO_URI || 'mongodb://localhost:27017/campusconnect';
-mongoose.connect(MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGO)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err.message));
 
